@@ -47,7 +47,6 @@ class OpenSnowSnowfallSpider(scrapy.Spider):
                'url': response.request.url,
                'data': data,
                }
-        #print(f'HERE IS THE DATA -----{to_save}----------')
         yield to_save
 
 process.crawl(OpenSnowSnowfallSpider)
