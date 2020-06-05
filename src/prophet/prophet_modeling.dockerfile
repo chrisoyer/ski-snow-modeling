@@ -1,10 +1,14 @@
-FROM python:3.6.8-slim
+FROM ubuntu:16.04
 
 WORKDIR /app
 
 COPY . /app
 RUN apt-get -y update  && apt-get install -y \
+  python3 \
   python3-dev \
+  python3-pip \
+  git \
+  software-properties-common \
   apt-utils \
   python-dev \
   build-essential \
@@ -20,6 +24,8 @@ RUN pip install pystan
 RUN pip install fbprophet
 RUN pip install notebook
 RUN pip install git
+
+EXPOSE 8888
 
 # Following CMD keeps the container running
 # Modify CMD to run the app that you require. 
