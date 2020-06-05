@@ -1,32 +1,20 @@
-FROM ubuntu:16.04
+FROM continuumio/miniconda3
 
 WORKDIR /app
 
-COPY . /app
-RUN apt-get -y update  && apt-get install -y \
-  python3 \
-  python3-dev \
-  python3-pip \
-  git \
-  software-properties-common \
-  apt-utils \
-  python-dev \
-  build-essential \
-&& rm -rf /var/lib/apt/lists/*
+# Create the environment:
+COPY environment.yml .
+RUN conda env create -f environment.yml
 
-RUN pip install --upgrade setuptools
-RUN pip install cython
-RUN pip install numpy
-RUN pip install pandas
-RUN pip install matplotlib
-RUN pip install seaborn
-RUN pip install pystan
-RUN pip install fbprophet
-RUN pip install notebook
-RUN pip install git
+# Make RUN commands use the new environment:
+SHELL ["conda", "run", "-n", "myenv", "/bin/bash", "-c"]
 
-EXPOSE 8888
+# The code to run when container is started:
+COPY run.py .
+ENTRYPOINT ["conda", "run", "-n", "myenv", "python", "run.py"]
 
 # Following CMD keeps the container running
 # Modify CMD to run the app that you require. 
 CMD tail -f /dev/null &
+
+EXPOSE 8888
