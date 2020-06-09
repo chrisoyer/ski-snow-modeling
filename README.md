@@ -30,7 +30,9 @@ TODO: Regress features against season length, e.g. snowfall, region, altitude, e
 
 Typical decomposition plot, this one for Winter Park: ![link](./resources/WP_decomposition.png)
 
-Select model (choosing (p,d,q)(P,D,Q)s order terms): Working on setup of walk-forward crossvalidation of models. AIC/BIC based model selection works, but givin different top models compared to traditional selection of terms based on AC/PAC plots. Plots looke like this: ![link](./resources/AC_PAC.png). 
+Select model (choosing (p,d,q)(P,D,Q)s order terms): Working on setup of walk-forward crossvalidation of models. AIC/BIC based model selection works, but givin different top models compared to traditional selection of terms based on AC/PAC plots. Plots look like this: ![link](./resources/AC_PAC.png). 
+
+For inference, I am currently using (0,1,1)(0,1,0)12 . The regression with SARIMA errors model includes snowfall as the exogenous variable. The betas for the snowfall variable for each resort are: ![snowfall_betas](./resources/snowfall_beta.png) 
 
 Models still in progress: LSTM model in Tenorflow.
 Facebook Prophet GAM model. (dockfile is working, modeling still in progress).
