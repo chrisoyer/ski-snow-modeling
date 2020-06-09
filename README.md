@@ -43,5 +43,5 @@ Select model (choosing (p,d,q)(P,D,Q)s order terms): Working on setup of walk-fo
 For inference, I am currently using (0,1,1)(0,1,0)12 . The regression with SARIMA errors model includes snowfall as the exogenous variable. The betas for the snowfall variable for each resort are: ![snowfall_betas](./resources/snowfall_beta.png) 
 
 Models still in progress: LSTM model in Tensorflow.  
-Facebook Prophet GAM model. (dockfile is working, modeling still in progress).
+Facebook Prophet GAM model. (dockerfile is working, modeling still in progress).
 
