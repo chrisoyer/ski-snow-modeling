@@ -20,7 +20,7 @@ Season length varied by region, with significant overlap ![link](./resources/sea
 I windsorized values on the right tail at 2.5 standard deviations: there were some values in the original data where decimals were missing (eg 65 inches followed the next day by 655 inches of base); there were replaced by prior good value. 
 ![link](./resources/log_base.png)
 
-Data cleaning issues included data non-randomly missing: the base and snowfall data is only reported when resorts are open. I assumed zero snowfall for unreported dates, assumed all dates in August had 0 base depth (which should hold for all but one or two locations in the US with glacier skiing), and used 2nd order polynomial interpolation in between season end and the summer zero values. ![link](./resources/interpolated_data.png TODO: indicate filled values vs original)
+Data cleaning issues included data non-randomly missing: the base and snowfall data is only reported when resorts are open. I assumed zero snowfall for unreported dates, assumed all dates in August had 0 base depth (which should hold for all but one or two locations in the US with glacier skiing), and used 2nd order polynomial interpolation in between season end and the summer zero values. ![link](./resources/interpolated_data.png) TODO: indicate filled values vs original)
 
 Final average daily snowfall in each region by month: ![link](./resources/daily_snowfall.png)
 
