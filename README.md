@@ -13,9 +13,9 @@ Tools: Scrapy, seaborn, altair (vega-lite visualizations), Numpy/Pandas etc., ti
 ### From EDA including geographic data:
 Data was scraped from wkikipedia (for geographic data including elevation) and OntheSnow.com (for time series data of snow fall and base depth by day.) Pandas and Scrapy were used for scraping. 
 
-Elevation and Skiable Area, show lowest to highest elevation within each resort: ![area vs elev](./resources/elevation_area.html "Click for interactive version")
+Elevation and Skiable Area, show lowest to highest elevation within each resort: [![area vs elev](./resources/elevation_vs_area.png)](https://rawcdn.githack.com/chrisoyer/ski-snow-modeling/dbed27325d79cea4744d246df3ae58258a8025d4/resources/elevation_area.html "Click for interactive version")
 
-Link to large plot of ski resorts, grouped by region, showing elevation and annual snowfall: [elevation by region](./resources/altitude_and_snowfall_by_region.html "Click for interactive version")
+Link to large plot of ski resorts, grouped by region, showing elevation and annual snowfall: [elevation by region](https://rawcdn.githack.com/chrisoyer/ski-snow-modeling/dbed27325d79cea4744d246df3ae58258a8025d4/resources/altitude_and_snowfall_by_region.html "Click for interactive version")
 
 Example resort, A Basin. The base depth can be seen to be highly seasonal, with frequent jumps interspersed in an overall decrease (absent said jumps). Jumps should be powder days, and this is what I attempt to model. Note: 'pseudo_ts' is timestamp altered so all series within a regon are contiguous, to facilitate grouped analysis: ![abasin base](./resources/Abasin_viz.png)
 
