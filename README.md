@@ -8,6 +8,7 @@ Tools: Scrapy, seaborn, altair (vega-lite visualizations), Numpy/Pandas etc., ti
 ### Files:
 [./src/](./src/): elevation_scrapy.py scrapes basic data from wikipedia, station_list_ots.py scrapes list of stations from OTS, and ots_snow_scrapy_scraper.py scrapes the actual snowfall and base data from OTS. elevation_scrape_viz.ipynb explores and visualizes the scraped data.  
 [./src/analysis/](./src/analysis/): snow_EDA_&_cleaning.ipynb does EDA, snow_ts_analysis.ipynb is classical e.g. ARIMA analysis, and TF-snow_ts_analysis.ipynb is the tensorflow model.  
+[./src/analysis/project_utils](./src/analysis/project_utils): location for .py files with fuctions/classes used in the notebooks.
 [./src/prophet/](./src/prophet/) holds the dockerfile and notebook for the prophet model.
 
 ### From EDA including geographic data:
