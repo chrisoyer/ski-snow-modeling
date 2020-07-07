@@ -1,5 +1,5 @@
 # ski-snow-modeling
-Exploring the relationship between ski resort snowfall, base depth, and other features. 
+Exploring the relationship between ski resort snowfall, base depth, and other features, with an emphasis on time series modeling. 
 
 ### Description of Goals
 EDA to see how ski resort snowfall, season length, base depth, etc. vary by region. Modeling: using altitude, location, etc to predict season length, and time series analysis of base depth evolution.
