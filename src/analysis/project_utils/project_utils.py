@@ -7,6 +7,7 @@ import numpy as np
 import pandas as pd
 from itertools import product as it_product
 import matplotlib.pyplot as plt
+import seaborn as sns
 from statsmodels.graphics.tsaplots import plot_acf, plot_pacf
 from sklearn.base import BaseEstimator, RegressorMixin
 from sklearn.model_selection import TimeSeriesSplit, cross_validate, GridSearchCV
@@ -114,19 +115,24 @@ def resid_plotter(residuals=None, y=None):
     print(residuals.describe())
     
 
-def time_crossval(model, X, y):
+def time_crossval(model=None, X=None, y=None, splits=8):
     """takes sklearn-API model and returns CV results
     input:
         model: sklearn-API model
         X: 
         Y:
     """
-    time_split = TimeSeriesSplit(8)
+    time_split = TimeSeriesSplit(splits)
     cv_results = cross_validate(model, X, y, cv=time_split, 
                             scoring=['neg_root_mean_squared_error', 'r2',
-                                     'neg_mean_absolute_error'], n_jobs=1) 
-    return cv_results
-
+                                     'neg_mean_absolute_error'], n_jobs=1)
+    return (pd.DataFrame(cv_results)
+            .assign(test_rmse=lambda x: -x.test_neg_root_mean_squared_error,
+                    test_mae=lambda x: -x.test_neg_mean_absolute_error)
+            .filter(['test_r2', 'test_rmse', 'test_mae'])
+            .sort_values(by=['test_mae'], ascending=True)
+            )
+                
 def IC_chooser(unwrapped_mod=None, X=None, y=None, order_limit=(2,1)):
     """Use AIC/BIC to choose best model from grid of (pdq)(PDQ)S models
     Params:
@@ -185,3 +191,91 @@ def train_test_split(df=None, station=None, exog_cols=None, ski_yr_cutoff=7):
     test = subset.query('ski_yr>@ski_yr_cutoff').drop(columns=['ski_yr'])
     return train, test
     
+    
+def y_and_yhat_plotter(model=None, data=None, test_data=None, steps=5, 
+                       start_skip=1, include_interval=True):
+    """plots values and model predictions
+    Inputs:
+        model: a fitted model with predict method
+        data: df with time series data and pseudo_ts index
+        test_data: out of sample data
+        exog_col: column name
+        steps: steps out to predict
+        include_interval: bool if include prediction confidence interval"""
+    # copy for both plots
+    model_multi = model
+    df = multi_df = data.rename(columns={'base': 'y'})
+    test_df = test_multi_df = test_data.rename(columns={'base': 'y'})
+    
+    #get prediction for both train & test
+    try:
+        df = pd.concat([df, test_df], axis=0)
+    except:
+        df = np.concatenate([df, test_df], axis=0)
+    
+    #check model type TF vs SM
+    try:
+        modelkwgs = {'steps': 1, 'include_ci': True, 'dynamic': False}
+        multikwgs = {'steps': steps, 'include_ci': include_interval, 'dynamic': False}
+        _ = model.predict(df, **modelkwgs)  # todo: type check model faster
+    except:
+        modelkwgs = multikwgs = {}
+    df['yhat'] = model.predict(df, **modelkwgs)
+    if include_interval:
+        df['lowerCI'] = model.prediction_ci.iloc[:, 0]
+        df['upperCI'] = model.prediction_ci.iloc[:, 1]
+    test_multi_df['yhat'] = model_multi.predict(test_multi_df, **multikwgs)
+    if include_interval:
+        test_multi_df['lowerCI'] = model_multi.prediction_ci.iloc[:, 0]
+        test_multi_df['upperCI'] = model_multi.prediction_ci.iloc[:, 1]
+    
+    multi_df = pd.concat([multi_df, test_multi_df])
+
+    # skip first value: predictions are based on prior values
+    df2, multi2_df = df.iloc[start_skip:, :], multi_df.iloc[start_skip:, :]
+
+    def melt_predicts(df):
+        return (df
+                .reset_index()
+                .rename(columns={'index': 'pseudo_ts'})
+                .melt(value_vars=['y', 'yhat'], id_vars=['pseudo_ts'])
+                )
+    melted_df2 = melt_predicts(df)
+    melted_df_multi2 = melt_predicts(multi_df)
+
+    fig, axes = plt.subplots(2, 1, figsize=(18, 6), sharex=True)
+
+    def plot_sub(y, ci_data, axis):
+        sns.lineplot(data=y, x='pseudo_ts', y='value', hue='variable',
+                     marker='x', ax=axis)
+        if include_interval:
+            axis.fill_between(ci_data.index, ci_data.lowerCI,
+                              ci_data.upperCI, alpha=.3)
+    data = (df2, multi2_df)
+    melted_data = (melted_df2, melted_df_multi2)
+    for datum, melted_datum, axis in zip(data, melted_data, axes):
+        plot_sub(y=melted_datum, ci_data=datum, axis=axis)
+    axes[0].set_title("One Step Prediction over Train & Test")
+    axes[1].set_title("Recursive Prediction on Test Set")
+
+
+def hist_plotter(hist):
+    """plots train and validation scores by epoch
+    hist: TF history object
+    """
+    metrics = [m for m in hist if 'loss' not in m and 'val' not in m]
+    fig, ax = plt.subplots(nrows=len(metrics), ncols=1, sharex=True)
+    fig.patch.set_facecolor('whitesmoke')
+    
+    for i, metric in enumerate(metrics):
+        train_metric = (pd.DataFrame(enumerate(hist[metric], 1))
+                        .rename(columns={0:'epoch', 1:'value'}))
+        ax[i].plot(train_metric.epoch, train_metric.value, label=f"Train")
+        val_metric = (pd.DataFrame(enumerate(hist[f"val_{metric}"], 1))
+                       .rename(columns={0:'epoch', 1:'value'}))
+        ax[i].plot(val_metric.epoch, val_metric.value, label="Validation")
+        ax[i].set_title(f"{metric}")
+    plt.legend(loc='upper right')
+    fig.suptitle('Training and Validation Metrics')
+    plt.xlabel('Epochs')
+    plt.show()
