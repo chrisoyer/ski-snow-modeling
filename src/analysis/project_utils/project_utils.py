@@ -276,6 +276,6 @@ def hist_plotter(hist):
         ax[i].plot(val_metric.epoch, val_metric.value, label="Validation")
         ax[i].set_title(f"{metric}")
     plt.legend(loc='upper right')
-    fig.suptitle('Training and Validation Metrics')
+    fig.suptitle('Training and Validation Metrics', size=25)
     plt.xlabel('Epochs')
     plt.show()
