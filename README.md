@@ -32,8 +32,6 @@ Data cleaning issues included data missing not at random: the base and snowfall 
 
 Final average daily snowfall in each region by month: ![link](./resources/daily_snowfall.png)
 
-TODO: Regress features against season length, e.g. snowfall, region, altitude, etc. 
-
 ### Data cleaned for time series analysis and ARIMA style models explored. 
 
 Typical decomposition plot, this one for Winter Park: ![link](./resources/WP_decomposition.png)
@@ -43,6 +41,17 @@ Select model (choosing (p,d,q)(P,D,Q)s order terms): I'm working on setup of wal
 
 For inference, I am currently using (0,1,1)(0,1,0)12 . The regression with SARIMA errors model includes snowfall as the exogenous variable. The betas for the snowfall variable for each resort are: ![snowfall_betas](./resources/snowfall_beta.png) 
 
-Models still in progress: LSTM model in Tensorflow.  
-Facebook Prophet GAM model. (dockerfile is working, modeling still in progress).
+### LSTM Models in Tensorflow
+After trying several architectures, the LSTM model with the best results was 1 hidden lstm layer, with 400 cells, stopped early at 12 epochs. 
+![link](./resources/lstm_history.png)  
+![link](./resources/lstm_yhat.png)
+
+Note: I switched to time intervals of 1 day. Todo: multistep predictions from model, modeled directly or feeding predictions back into model.
+
+In progress: reviewing transformer-style models or CNNs, possibly with dialiation.  
+Facebook Prophet GAM model. (dockerfile is working, modeling still in progress).  
+Stan structural bayesian model.  
+Panel-style regression.   
+  
+Regress features against season length, e.g. snowfall, region, altitude, etc. 
 
