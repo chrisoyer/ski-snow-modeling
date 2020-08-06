@@ -1,6 +1,16 @@
 # ski-snow-modeling
 Exploring the relationship between ski resort snowfall, base depth, and other features, with an emphasis on time series modeling. 
 
+### Table of Contents
+1. [Description of Goals](https://github.com/chrisoyer/ski-snow-modeling/#Description-of-Goals)
+1. [Files](https://github.com/chrisoyer/ski-snow-modeling/#Files)
+1. [EDA including geographic data](https://github.com/chrisoyer/ski-snow-modeling/#from-eda-including-geographic-data)
+1. [Data Cleaning](https://github.com/chrisoyer/ski-snow-modeling/#Data-Cleaning)
+1. [Time Series Analysis and ARIMA-style Models](https://github.com/chrisoyer/ski-snow-modeling/#Time-Series-Analysis-and-ARIMA-style-Models)
+1. [LSTM Models in Tensorflow](https://github.com/chrisoyer/ski-snow-modeling/#LSTM-Models-in-Tensorflow)
+1. [Regression Using Engineered Features](https://github.com/chrisoyer/ski-snow-modeling/#Regression-Using-Engineered-Features)
+1. [In Progress](https://github.com/chrisoyer/ski-snow-modeling/#In-Progress)
+
 ### Description of Goals
 EDA to see how ski resort snowfall, season length, base depth, etc. vary by region. Modeling: using altitude, location, etc to predict season length, and time series analysis of base depth evolution.
 Tools: Scrapy, seaborn, altair (vega-lite visualizations), Numpy/Pandas etc., time series analysis with statsmodels (building to regression with SARIMA errors), tensorflow LSTM, FBProphet. Because prophet is somewhat difficult to install (dependencies on Stan and C++ compiler), I created a docker image of the install and am running it on AWS. 
@@ -11,7 +21,7 @@ Tools: Scrapy, seaborn, altair (vega-lite visualizations), Numpy/Pandas etc., ti
 [./src/analysis/project_utils](./src/analysis/project_utils): location for .py files with fuctions/classes used in the notebooks.  
 [./src/prophet/](./src/prophet/) holds the dockerfile and notebook for the prophet model.
 
-### From EDA including geographic data:
+### EDA including geographic data:
 Data was scraped from wkikipedia (for geographic data including elevation) and OntheSnow.com (for time series data of snow fall and base depth by day.) Pandas and Scrapy were used for scraping. 
 
 Elevation and Skiable Area, show lowest to highest elevation within each resort: [![area vs elev](./resources/elevation_vs_area.png)](https://rawcdn.githack.com/chrisoyer/ski-snow-modeling/dbed27325d79cea4744d246df3ae58258a8025d4/resources/elevation_area.html "Click for interactive version")
@@ -34,7 +44,7 @@ Data cleaning issues included data missing not at random: the base and snowfall 
 
 Final average daily snowfall in each region by month: ![link](./resources/daily_snowfall.png)
 
-### Data cleaned for time series analysis and ARIMA style models explored. 
+### Time Series Analysis and ARIMA-style Models 
 
 Typical decomposition plot, this one for Winter Park: ![link](./resources/WP_decomposition.png)
 
@@ -65,7 +75,8 @@ The linear model also did well, and these are the paths of the coefficients for 
 ![link](./resources/coef_paths.png)
 
 
-In progress: reviewing transformer-style models or CNNs, possibly with dialation.  
-Facebook Prophet GAM model. (dockerfile is working, modeling still in progress).  
-Stan structural bayesian model.  
-Panel-style regression.   
+### In progress: 
+* reviewing transformer-style models or CNNs, possibly with dialation.  
+* Facebook Prophet GAM model. (dockerfile is working, modeling still in progress).  
+* Stan structural bayesian model.  
+* Panel-style regression.   
