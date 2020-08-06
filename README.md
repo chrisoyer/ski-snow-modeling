@@ -18,12 +18,14 @@ Elevation and Skiable Area, show lowest to highest elevation within each resort:
 
 Link to large plot of ski resorts, grouped by region, showing elevation and annual snowfall: [elevation by region](https://rawcdn.githack.com/chrisoyer/ski-snow-modeling/dbed27325d79cea4744d246df3ae58258a8025d4/resources/altitude_and_snowfall_by_region.html "Click for interactive version")
 
-Example resort, A Basin. The base depth can be seen to be highly seasonal, with frequent jumps interspersed in an overall decrease (absent said jumps). Jumps should be powder days, and this is what I attempt to model. Note: 'pseudo_ts' is timestamp altered so all series within a regon are contiguous, to facilitate grouped analysis: ![abasin base](./resources/Abasin_viz.png)
+Example resort, A Basin. The base depth can be seen to be highly seasonal, with frequent jumps interspersed in an overall decrease (absent said jumps). Jumps should be powder days, and this is what I attempt to model. Note: 'pseudo_ts' is timestamp altered so all series within a region are contiguous, to facilitate grouped analysis:  
+![abasin base](./resources/Abasin_viz.png)
 
-Season length varied by region, with significant overlap ![season length](./resources/season_length.png)
+Season length varied by region, with significant overlap:  
+![season length](./resources/season_length.png)
 
 ### Data Cleaning
-I windsorized values on the right tail at 2.5 standard deviations: there were some values in the original data where decimals were missing (eg 65 inches followed the next day by 655 inches of base); there were replaced by prior good value. 
+I windsorized values on the right tail at 2.5 standard deviations: there were some values in the original data where decimals were missing (eg 65 inches followed the next day by 655 inches of base); there were replaced by prior good value.  
 ![link](./resources/log_base.png)
 
 Data cleaning issues included data missing not at random: the base and snowfall data is only reported when the resort is open, which is a seasonal period based on snow depth (and sometimes other seasonal issues, e.g. fixed-season leases). I assumed zero snowfall for unreported dates, assumed all dates in August had 0 base depth (which should hold for all but one or two locations in the US with glacier skiing), and used polynomial interpolation in between season end and the summer zero values. Extreme values were removed: some values were clearly coding error and values above 3 standard deviations (259 inches of snow) were windsorized. Additionally, after doing the interpolation, values that greatly increased or decreased (absoluted change of 4 std. dev. from surrouding 6 values) were replaced with the average of 6 surrounding values.
@@ -39,7 +41,8 @@ Typical decomposition plot, this one for Winter Park: ![link](./resources/WP_dec
 Select model (choosing (p,d,q)(P,D,Q)s order terms): I'm working on setup of walk-forward crossvalidation of models. AIC/BIC based model selection works, but is suggesting different top models compared to traditional selection of terms based on AC/PAC plots. Plots look like this:
 ![link](./resources/AC_PAC.png). 
 
-For inference, I am currently using (0,1,1)(0,1,0)12 . The regression with SARIMA errors model includes snowfall as the exogenous variable. The betas for the snowfall variable for each resort are:   <img src="./resources/snowfall_beta.png" width=480>
+For inference, I am currently using (0,1,1)(0,1,0)12 . The regression with SARIMA errors model includes snowfall as the exogenous variable. The betas for the snowfall variable for each resort are:  
+<img src="./resources/snowfall_beta.png" width=480>
 
 
 ### LSTM Models in Tensorflow
