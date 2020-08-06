@@ -39,19 +39,30 @@ Typical decomposition plot, this one for Winter Park: ![link](./resources/WP_dec
 Select model (choosing (p,d,q)(P,D,Q)s order terms): I'm working on setup of walk-forward crossvalidation of models. AIC/BIC based model selection works, but is suggesting different top models compared to traditional selection of terms based on AC/PAC plots. Plots look like this:
 ![link](./resources/AC_PAC.png). 
 
-For inference, I am currently using (0,1,1)(0,1,0)12 . The regression with SARIMA errors model includes snowfall as the exogenous variable. The betas for the snowfall variable for each resort are: ![snowfall_betas](./resources/snowfall_beta.png) 
+For inference, I am currently using (0,1,1)(0,1,0)12 . The regression with SARIMA errors model includes snowfall as the exogenous variable. The betas for the snowfall variable for each resort are:   <img src="./resources/snowfall_beta.png" width=480>
+
 
 ### LSTM Models in Tensorflow
-After trying several architectures, the LSTM model with the best results was 1 hidden lstm layer, with 400 cells, stopped early at 12 epochs. 
+After trying several architectures, the LSTM model with the best results was 1 hidden lstm layer, with 400 cells, stopped early at 12 epochs.  
+
 ![link](./resources/lstm_history.png)  
 ![link](./resources/lstm_yhat.png)
 
 Note: I switched to time intervals of 1 day. Todo: multistep predictions from model, modeled directly or feeding predictions back into model.
 
-In progress: reviewing transformer-style models or CNNs, possibly with dialiation.  
+### Regression Using Engineered Features
+I predicted ski season length using several models, chosen using cross-validated test error, hyperparameters chosen by random search.
+The response variable was created from the time series data, and I included the beta variable from the regression with SARIMA errors model as a predictor variable.  
+![link](./resources/model_error.png)
+
+The Gradient Boosting model performed well; these are the feature importances:
+![link](./resources/feat_importance.png)
+
+The linear model also did well, and these are the paths of the coefficients for difference levels of regularization - as the regularization decreases, the coefficients go from zero to the OLS estimate. 
+![link](./resources/coef_paths.png)
+
+
+In progress: reviewing transformer-style models or CNNs, possibly with dialation.  
 Facebook Prophet GAM model. (dockerfile is working, modeling still in progress).  
 Stan structural bayesian model.  
 Panel-style regression.   
-  
-Regress features against season length, e.g. snowfall, region, altitude, etc. 
-
