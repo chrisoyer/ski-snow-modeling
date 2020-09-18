@@ -18,8 +18,8 @@ Tools: Scrapy, seaborn, altair (vega-lite visualizations), Numpy/Pandas etc., ti
 
 ### Files:
 [./src/](./src/): elevation_scrapy.py scrapes basic data from wikipedia, station_list_ots.py scrapes list of stations from OTS, and ots_snow_scrapy_scraper.py scrapes the actual snowfall and base data from OTS. elevation_scrape_viz.ipynb explores and visualizes the scraped data.  
-[./src/analysis/](./src/analysis/): snow_EDA_&_cleaning.ipynb does EDA, snow_ts_analysis.ipynb is classical e.g. ARIMA analysis, and TF-snow_ts_analysis.ipynb is the tensorflow model.  
-[./src/analysis/project_utils](./src/analysis/project_utils): location for .py files with fuctions/classes used in the notebooks.  
+[./src/analysis/](./src/analysis/): snow_EDA_&_cleaning.ipynb does EDA, snow_ts_analysis.ipynb is classical e.g. ARIMA analysis, TF-snow_ts_analysis.ipynb is the tensorflow model, and snow-stan.ipynb is the PyStan model.  
+[./src/analysis/project_utils](./src/analysis/project_utils): location for .py files with fuctions/classes used in the multiple places.  
 [./src/prophet/](./src/prophet/) holds the dockerfile and notebook for the prophet model.
 
 ### EDA including geographic data:
@@ -71,6 +71,8 @@ I modeled the effect of melting by month, and the effect of snowfall. These dist
 The amount of base derived from a unit of snowfall varies by region, with Cascades seeing large amounts of base (.12), and Colorado seeing small amounts (.05) - I did not encode individual priors for each region, but this makes sense, as fluffy dry powder should compact more than heavy, wet powder.
 ![link](./resources/unpooled_traces.png)
 
+Todo: add predictions and estimate test error metrics.
+
 ### Regression Using Engineered Features
 I predicted ski season length using several models, chosen using cross-validated test error, hyperparameters chosen by random search.
 The response variable was created from the time series data, and I included the beta variable from the regression with SARIMA errors model as a predictor variable.  
@@ -86,5 +88,3 @@ The linear model also did well, and these are the paths of the coefficients for 
 ### In progress: 
 * reviewing transformer-style models or CNNs, possibly with dialation.  
 * Facebook Prophet GAM model. (dockerfile is working, modeling still in progress).  
-* Stan structural bayesian model.  
-* Panel-style regression.   
