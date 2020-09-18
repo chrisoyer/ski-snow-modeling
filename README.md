@@ -69,7 +69,7 @@ While predicting future values is an importance use of time series data, I was m
 
 I modeled the effect of melting by month, and the effect of snowfall. These distribution of estimated values for these variables are shown on the left. The amount of melting is quite small (around .02 inches lost per day) for January and February, whereas in April .25 inch is lost per day. Note: because the values for May-November are rare, values are mostly from prior, and noise dominates. 
 The amount of base derived from a unit of snowfall varies by region, with Cascades seeing large amounts of base (.12), and Colorado seeing small amounts (.05) - I did not encode individual priors for each region, but this makes sense, as fluffy dry powder should compact more than heavy, wet powder.
-![link](./resources/pooled_traces.png)
+![link](./resources/unpooled_traces.png)
 
 ### Regression Using Engineered Features
 I predicted ski season length using several models, chosen using cross-validated test error, hyperparameters chosen by random search.
