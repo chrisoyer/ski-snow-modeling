@@ -8,6 +8,7 @@ Exploring the relationship between ski resort snowfall, base depth, and other fe
 1. [Data Cleaning](https://github.com/chrisoyer/ski-snow-modeling/#Data-Cleaning)
 1. [Time Series Analysis and ARIMA-style Models](https://github.com/chrisoyer/ski-snow-modeling/#Time-Series-Analysis-and-ARIMA-style-Models)
 1. [LSTM Models in Tensorflow](https://github.com/chrisoyer/ski-snow-modeling/#LSTM-Models-in-Tensorflow)
+1. [Bayesian Regression with PyStan](https://github.com/chrisoyer/ski-snow-modeling/#Bayesian-Regression-in-PyStan)
 1. [Regression Using Engineered Features](https://github.com/chrisoyer/ski-snow-modeling/#Regression-Using-Engineered-Features)
 1. [In Progress](https://github.com/chrisoyer/ski-snow-modeling/#In-Progress)
 
@@ -62,6 +63,14 @@ After trying several architectures, the LSTM model with the best results was 1 h
 ![link](./resources/lstm_yhat.png)
 
 Note: I switched to time intervals of 1 day. Todo: multistep predictions from model, modeled directly or feeding predictions back into model.
+
+### Bayesian-Regression-in-PyStan
+While predicting future values is an importance use of time series data, I was most interested in inference into the causes of base depth change. I wanted to incorporate domain knowlege, in this case the obvious information that without snowfall, base depth can only decrease (from melting and possibly sublimation); and ceteris paribus, snowfall should increase base depth, but by less than the amount of snowfall (snow falls as powder, and is compressed into packed snow). Modeling this system with these constraints can be done by specifying priors in a Baysian statistical model. 
+
+I modeled the effect of melting by month, and the effect of snowfall. These distribution of estimated values for these variables are shown on the left. Note: because the values for May-November are mostly or entirely from interpolated values, and can be ignored. 
+![link](./resources/pooled_traces.png)
+
+To do: hierarchical model of snowfall->base effect by region.
 
 ### Regression Using Engineered Features
 I predicted ski season length using several models, chosen using cross-validated test error, hyperparameters chosen by random search.
