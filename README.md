@@ -67,7 +67,7 @@ Note: I switched to time intervals of 1 day. Todo: multistep predictions from mo
 ### Bayesian-Regression-in-PyStan
 While predicting future values is an importance use of time series data, I was most interested in inference into the causes of base depth change. I wanted to incorporate domain knowlege, in this case the obvious information that without snowfall, base depth can only decrease (from melting and possibly sublimation); and ceteris paribus, snowfall should increase base depth, but by less than the amount of snowfall (snow falls as powder, and is compressed into packed snow). Modeling this system with these constraints can be done by specifying priors in a Baysian statistical model. 
 
-I modeled the effect of melting by month, and the effect of snowfall. These distribution of estimated values for these variables are shown on the left. Note: because the values for May-November are mostly or entirely from interpolated values, and can be ignored. 
+I modeled the effect of melting by month, and the effect of snowfall. These distribution of estimated values for these variables are shown on the left. The amount of melting is quite small (around .02 inches lost per day) for January and February, whereas in April .25 inch is lost per day. Note: because the values for May-November are mostly or entirely from interpolated values, and can be ignored. Months are zero-indexed. 
 ![link](./resources/pooled_traces.png)
 
 To do: hierarchical model of snowfall->base effect by region.
