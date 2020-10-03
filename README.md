@@ -67,8 +67,11 @@ Note: I switched to time intervals of 1 day. Todo: multistep predictions from mo
 ### Bayesian-Regression-in-PyStan
 While predicting future values is an importance use of time series data, I was most interested in inference into the causes of base depth change. I wanted to incorporate domain knowlege, in this case the obvious information that without snowfall, base depth can only decrease (from melting and possibly sublimation); and ceteris paribus, snowfall should increase base depth, but by less than the amount of snowfall (snow falls as powder, and is compressed into packed snow). Modeling this system with these constraints can be done by specifying priors in a Baysian statistical model. 
 
-I modeled the effect of melting by month, and the effect of snowfall. These distribution of estimated values for these variables are shown on the left. The amount of melting is quite small (around .02 inches lost per day) for January and February, whereas in April .25 inch is lost per day. Note: because the values for May-November are rare, values are mostly from prior, and noise dominates. 
-The amount of base derived from a unit of snowfall varies by region, with Cascades seeing large amounts of base (.12), and Colorado seeing small amounts (.05) - I did not encode individual priors for each region, but this makes sense, as fluffy dry powder should compact more than heavy, wet powder.
+I modeled the effect of melting by month, and the effect of snowfall. The amount of melting is quite small (around .02 inches lost per day) for January and February, whereas in April .25 inch is lost per day. Note: because the values for May-November are rare, values are mostly from prior, and noise dominates. 
+![link](./resources/monthly_snowmelt.png)  
+The amount of base derived from a unit of snowfall varies by region, with Cascades seeing large amounts of base (.12), and Colorado seeing small amounts (.05) - I did not encode individual priors for each region, but this makes sense, as fluffy dry powder should compact more than heavy, wet powder.  
+![link](./resources/snowfal_beta_bayesian.png)
+Estimates from individual Markov Chains & trace plots:  
 ![link](./resources/unpooled_traces.png)
 
 Todo: add predictions and estimate test error metrics.
