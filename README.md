@@ -35,6 +35,11 @@ Example resort, A Basin. The base depth can be seen to be highly seasonal, with 
 Season length varied by region, with significant overlap:  
 ![season length](./resources/season_length.png)
 
+Final average daily snowfall in each region by month: ![link](./resources/daily_snowfall.png)
+
+One interesting question is how smoothly through the season snowfall occurs. Considered on a daily interval (similar patterns showed up on weekly intervals too), most snowfall occurs on days that get less than half a foot of snow. Colorado has a mean snowfall on days receiving some snow of 4 inches; in the Sierras the mean snowday brings 7.5 inches.  
+![link](./resources/snow_density.png)
+
 ### Data Cleaning
 I windsorized values on the right tail at 2.5 standard deviations: there were some values in the original data where decimals were missing (eg 65 inches followed the next day by 655 inches of base); there were replaced by prior good value.  
 ![link](./resources/log_base.png)
@@ -42,8 +47,6 @@ I windsorized values on the right tail at 2.5 standard deviations: there were so
 Data cleaning issues included data missing not at random: the base and snowfall data is only reported when the resort is open, which is a seasonal period based on snow depth (and sometimes other seasonal issues, e.g. fixed-season leases). I assumed zero snowfall for unreported dates, assumed all dates in August had 0 base depth (which should hold for all but one or two locations in the US with glacier skiing), and used polynomial interpolation in between season end and the summer zero values. Extreme values were removed: some values were clearly coding error and values above 3 standard deviations (259 inches of snow) were windsorized. Additionally, after doing the interpolation, values that greatly increased or decreased (absoluted change of 4 std. dev. from surrouding 6 values) were replaced with the average of 6 surrounding values.
 
 ![link](./resources/interpolated_data.png)
-
-Final average daily snowfall in each region by month: ![link](./resources/daily_snowfall.png)
 
 ### Time Series Analysis and ARIMA-style Models 
 
@@ -53,7 +56,7 @@ Select model (choosing (p,d,q)(P,D,Q)s order terms): I'm working on setup of wal
 ![link](./resources/AC_PAC.png). 
 
 For inference, I am currently using (0,1,1)(0,1,0)12 . The regression with SARIMA errors model includes snowfall as the exogenous variable. The betas for the snowfall variable for each resort are:  
-<img src="./resources/snowfall_beta.png" width=480>
+<img src="./resources/snowfall_beta.png" width=600>
 
 
 ### LSTM Models in Tensorflow
@@ -64,13 +67,13 @@ After trying several architectures, the LSTM model with the best results was 1 h
 
 Note: I switched to time intervals of 1 day. Todo: multistep predictions from model, modeled directly or feeding predictions back into model.
 
-### Bayesian-Regression-in-PyStan
+### Bayesian Regression in PyStan
 While predicting future values is an importance use of time series data, I was most interested in inference into the causes of base depth change. I wanted to incorporate domain knowlege, in this case the obvious information that without snowfall, base depth can only decrease (from melting and possibly sublimation); and ceteris paribus, snowfall should increase base depth, but by less than the amount of snowfall (snow falls as powder, and is compressed into packed snow). Modeling this system with these constraints can be done by specifying priors in a Baysian statistical model. 
 
-I modeled the effect of melting by month, and the effect of snowfall. The amount of melting is quite small (around .02 inches lost per day) for January and February, whereas in April .25 inch is lost per day. Note: because the values for May-November are rare, values are mostly from prior, and noise dominates. 
-![link](./resources/monthly_snowmelt.png)  
-The amount of base derived from a unit of snowfall varies by region, with Cascades seeing large amounts of base (.12), and Colorado seeing small amounts (.05) - I did not encode individual priors for each region, but this makes sense, as fluffy dry powder should compact more than heavy, wet powder.  
-![link](./resources/snowfal_beta_bayesian.png)
+I modeled the effect of melting by month, and the effect of snowfall. The amount of melting is quite small about 1 inch per _month_ for January and February, whereas in May one inch is lost per _day_. Note: because the values for June-October are rare, values are mostly from prior, and noise dominates.  
+<img src="./resources/monthly_snowmelt.png" width=700>  
+The amount of base derived from a unit of snowfall varies by region, with Cascades seeing large amounts of base (.12), and Colorado seeing small amounts (.05) - I did not encode individual priors for each region, but this makes sense, as fluffy dry powder should compact more than heavy, wet powder. Note the improvement these estimates show vs the regression with SARIMA errors model above.
+<img src="./resources/snowfall_beta_bayesian.png" width=700>  
 Estimates from individual Markov Chains & trace plots:  
 ![link](./resources/unpooled_traces.png)
 
@@ -81,8 +84,8 @@ I predicted ski season length using several models, chosen using cross-validated
 The response variable was created from the time series data, and I included the beta variable from the regression with SARIMA errors model as a predictor variable.  
 ![link](./resources/model_error.png)
 
-The Gradient Boosting model performed well; these are the feature importances:
-![link](./resources/feat_importance.png)
+The Gradient Boosting model performed well; these are the permutation importances:
+![link](./resources/perm_importance.png)
 
 The linear model also did well, and these are the paths of the coefficients for difference levels of regularization - as the regularization decreases, the coefficients go from zero to the OLS estimate. 
 ![link](./resources/coef_paths.png)
