@@ -16,6 +16,6 @@ ENTRYPOINT ["conda", "run", "-n", "myenv", "python"]
 # Following CMD keeps the container running
 # Modify CMD to run the app that you require. 
 CMD tail -f /dev/null &
-CMD ["jupyter", "notebook", "--port=8888", "--no-browser"]
+CMD ["jupyter", "lab", "--port=8888", "--no-browser"]
 
 EXPOSE 8888
