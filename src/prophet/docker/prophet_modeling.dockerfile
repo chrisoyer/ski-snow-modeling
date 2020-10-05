@@ -2,7 +2,7 @@ FROM continuumio/miniconda3
 
 WORKDIR /app
 
-# Create the environment:
+# Create the environment by adding layers:
 COPY environment.yml .
 RUN conda env create -f environment.yml
 
@@ -13,9 +13,8 @@ SHELL ["conda", "run", "-n", "myenv", "/bin/bash", "-c"]
 #COPY run.py .
 ENTRYPOINT ["conda", "run", "-n", "myenv", "python"]
 
-# Following CMD keeps the container running
-# Modify CMD to run the app that you require. 
-CMD tail -f /dev/null &
-CMD ["jupyter", "lab", "--port=8888", "--no-browser"]
+# Following CMD keeps the container running. CMD runs the default 
+CMD ["tail", "-f", "/dev/null", "&", "jupyter", "lab", "--port=8888", "--no-browser"]
 
+# Doesn't directly expose port except for inter-container comm
 EXPOSE 8888
