@@ -9,6 +9,8 @@ dependencies:
   - matplotlib
   - seaborn
   - jupyterlab
+  - gcc_impl_linux-64
+  - gxx_impl_linux-64
   - pip
   - pip:
     - fbprophet
