@@ -10,7 +10,6 @@ RUN conda env create -f environment.yml
 SHELL ["conda", "run", "-n", "myenv", "/bin/bash", "-c"]
 
 # The code to run when container is started:
-#COPY run.py .
 ENTRYPOINT ["conda", "run", "-n", "myenv", "python"]
 
 # Following CMD keeps the container running. CMD runs the default 
