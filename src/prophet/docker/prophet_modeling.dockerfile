@@ -9,11 +9,17 @@ RUN conda env create -f environment.yml
 # Make RUN commands use the new environment:
 SHELL ["conda", "run", "-n", "myenv", "/bin/bash", "-c"]
 
-# The code to run when container is started:
-ENTRYPOINT ["conda", "run", "-n", "myenv", "python"]
+RUN ['fix-permissions', '/etc/jupyter/',]
 
-# Following CMD keeps the container running. CMD runs the default 
-CMD ["tail", "-f", "/dev/null", "&", "jupyter", "lab", "--port=8888", "--no-browser"]
+
+# Add Tini. Tini operates as a process subreaper for jupyter. This prevents kernel crashes.
+ENV TINI_VERSION v0.6.0
+ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /usr/bin/tini
+RUN chmod +x /usr/bin/tini
+ENTRYPOINT ["/usr/bin/tini", "--"]
+
+# CMD runs the default
+CMD ["jupyter", "lab", "--port=8888", "--no-browser"]
 
 # Doesn't directly expose port except for inter-container comm
 EXPOSE 8888
