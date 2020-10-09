@@ -11,4 +11,4 @@ ec2ip=$(aws ec2 describe-instances | grep -oP '(?<=PublicDnsName": ")ec2\-.+\.co
 # login
 # SECURITY note: for prod environments, strict host key check should be on. Only turn off for 
 # connection because this is always the first time ec2 instance is conected to.
-ssh -i "~/.aws/nvirgina-2.pem" -o StrictHostKeyChecking=no -L 8888:localhost:8888 ec2-user@$ec2ip -yv . ec2_script.sh
+ssh -i "~/.aws/nvirgina-2.pem" -o StrictHostKeyChecking=no -L 8888:localhost:8888 ec2-user@$ec2ip -yv
