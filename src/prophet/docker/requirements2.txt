@@ -1,6 +1,6 @@
 matplotlib
 seaborn
-pystan==2.17.1.0
+https://files.pythonhosted.org/packages/ce/bd/449fb3b6d5a04cc908c343d3546e425e00a829a13c185c9a627a9f0e8bd3/pystan-2.19.1.1-cp27-cp27m-manylinux1_x86_64.whl ; "linux"
 arviz
 jupyter
 fbprophet
