@@ -20,7 +20,7 @@ sudo yum update -y
 sudo amazon-linux-extras install docker
 
 # Add the ec2-user to the docker group so you can execute Docker commands without using sudo:
-sudo usermod -aG docker ec2-user && sudo groupadd docker && sudo newgrp docker
+sudo usermod -aG docker ec2-user && sudo groupadd docker && sudo newgrp docker && dockerd
 service docker start
 
 # git 
