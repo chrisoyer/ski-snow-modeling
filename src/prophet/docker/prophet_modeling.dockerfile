@@ -15,6 +15,7 @@ USER root
 # Create the environment by adding layers:
 RUN apt-get update && \
     apt-get install -y --no-install-recommends gcc && \
+	apt install python3-pip \
     rm -rf /var/lib/apt/lists/*
 
 COPY requirements.txt .
