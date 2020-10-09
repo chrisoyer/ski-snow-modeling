@@ -14,12 +14,11 @@ USER root
 
 # Create the environment by adding layers:
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends gcc && \
-	apt-get install python3-pip -y && \
+    apt-get install --no-install-recommends gcc python3-pip -y && \
     rm -rf /var/lib/apt/lists/*
 
 COPY requirements.txt .
-RUN ['pip', 'install', '--no-cache-dir', '-r', 'requirements.txt']
+RUN pip install --no-cache-dir -r requirements.txt
 
 # Add Tini. Tini operates as a process subreaper for jupyter. This prevents kernel crashes.
 ENV TINI_VERSION v0.6.0
