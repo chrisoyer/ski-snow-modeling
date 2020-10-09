@@ -11,8 +11,12 @@ FROM $BASE_CONTAINER
 WORKDIR /app
 
 # Create the environment by adding layers:
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends gcc && \
+    rm -rf /var/lib/apt/lists/*
+
 RUN ['conda', 'install', '--quiet', '--yes', '--freeze-installed',
-     'gcc_impl_linux-64', "'gxx_impl_linux-64'", "'pystan=2.17.1.0'",
+     "'pystan=2.17.1.0'",
 	 '&&', 'conda', 'clean', '--all', '-fy'] 
 
 COPY requirements.txt .
