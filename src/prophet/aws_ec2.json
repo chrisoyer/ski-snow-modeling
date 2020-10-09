@@ -1,7 +1,7 @@
 {
   "ImageId": "ami-0946d2ba12ee1ff75",
   "UserData":"file:://ec2_script.sh"
-  "KeyName": "gistdev_default_rsa",
+  "KeyName": "nvirgina-2",
   "SecurityGroupIds": [ "jupyter-sg" ],
   "InstanceType": "t2.large",
   "Placement": {
@@ -10,9 +10,7 @@
 
   "NetworkInterfaces": [
     {
-      "DeviceIndex": 0,
-      "SubnetId": "subnet-1f2b8d11",
-      "Groups": [ "sg-0123456" ],
+      "Groups": [ "sg-0e3ca31fafffd94ea" ],
       "AssociatePublicIpAddress": true
     }
   ]
