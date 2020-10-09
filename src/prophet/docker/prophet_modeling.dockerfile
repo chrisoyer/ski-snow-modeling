@@ -1,5 +1,10 @@
-FROM continuumio/miniconda3
+#########
+# Notes #
+#########
 
+# needs to be fixed to be multi-stage
+# needs mid size ec2 instance; micro will not have enough RAM to compile
+FROM continuumio/miniconda3
 WORKDIR /app
 
 # Create the environment by adding layers:
