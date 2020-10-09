@@ -18,7 +18,8 @@ RUN apt-get update && \
     apt-get install --no-install-recommends gcc g++ python3-pip -y && \
     rm -rf /var/lib/apt/lists/*  # cleanup
 
-COPY requirements.txt .
+COPY requirements1.txt .
+COPY requirements2.txt .
 RUN pip install --no-cache-dir -r requirements1.txt # needs to be installed first
 RUN pip install --no-cache-dir -r requirements2.txt
 
