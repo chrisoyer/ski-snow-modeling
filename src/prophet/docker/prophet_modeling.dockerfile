@@ -2,17 +2,21 @@
 # Notes #
 #########
 
+# modified from scipy-notebook/Dockerfile
+
 # needs to be fixed to be multi-stage
 # needs mid size ec2 instance; micro will not have enough RAM to compile
-FROM continuumio/miniconda3
+ARG BASE_CONTAINER=jupyter/minimal-notebook
+FROM $BASE_CONTAINER
 WORKDIR /app
 
 # Create the environment by adding layers:
-COPY environment.yml .
-RUN conda env create -f environment.yml
+RUN ['conda', 'install', '--quiet', '--yes', '--freeze-installed',
+     'gcc_impl_linux-64', 'gxx_impl_linux-64', 'pystan=2.17.1.0',
+	 '&&', 'conda', 'clean', '--all', '-fy'] 
 
-# Make RUN commands use the new environment:
-SHELL ["conda", "run", "-n", "myenv", "/bin/bash", "-c"]
+COPY requirements.txt .
+RUN ['pip', 'install', '-r', '--no-cache-dir', 'requirements.txt']
 
 # Add Tini. Tini operates as a process subreaper for jupyter. This prevents kernel crashes.
 ENV TINI_VERSION v0.6.0
@@ -21,7 +25,7 @@ RUN chmod +x /usr/bin/tini
 ENTRYPOINT ["/usr/bin/tini", "--"]
 
 # CMD runs the default
-CMD ["jupyter", "lab", "--port=8888", "--no-browser", "-allow-root", '--notebook-dir="/"']
+CMD ["jupyter", "notebook", "--port=8888", "--ip=*", "--no-browser", "--allow-root", '--notebook-dir="/"']
 
 # Doesn't directly expose port except for inter-container comm
 EXPOSE 8888
