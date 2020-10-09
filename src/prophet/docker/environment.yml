@@ -6,6 +6,7 @@ dependencies:
   - pystan=2.17.1.0
   - gcc_impl_linux-64
   - gxx_impl_linux-64
+  - jupyter  # remove once 2 stage works
   - pip
   - pip:
     - fbprophet
