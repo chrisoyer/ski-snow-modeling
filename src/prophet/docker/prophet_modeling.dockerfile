@@ -12,7 +12,7 @@ WORKDIR /app
 
 # Create the environment by adding layers:
 RUN ['conda', 'install', '--quiet', '--yes', '--freeze-installed',
-     'gcc_impl_linux-64', 'gxx_impl_linux-64', 'pystan=2.17.1.0',
+     'gcc_impl_linux-64', "'gxx_impl_linux-64'", "'pystan=2.17.1.0'",
 	 '&&', 'conda', 'clean', '--all', '-fy'] 
 
 COPY requirements.txt .
