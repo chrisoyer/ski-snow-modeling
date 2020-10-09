@@ -1,6 +1,6 @@
 matplotlib
 seaborn
-https://files.pythonhosted.org/packages/9f/cc/4e88a34a015aa7aa459220bd18429f3ac6b15c703465fc7c411989f04ccc/pystan-2.19.1.1-cp37-cp37m-manylinux1_x86_64.whl ; "linux"
+https://files.pythonhosted.org/packages/9f/cc/4e88a34a015aa7aa459220bd18429f3ac6b15c703465fc7c411989f04ccc/pystan-2.19.1.1-cp37-cp37m-manylinux1_x86_64.whl
 arviz
 jupyter
 fbprophet
