@@ -19,7 +19,7 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 COPY requirements.txt .
-RUN ['pip3', 'install', '--no-cache-dir', '-r', 'requirements.txt']
+RUN ['pip', 'install', '--no-cache-dir', '-r', 'requirements.txt']
 
 # Add Tini. Tini operates as a process subreaper for jupyter. This prevents kernel crashes.
 ENV TINI_VERSION v0.6.0
