@@ -10,6 +10,8 @@ ARG BASE_CONTAINER=jupyter/minimal-notebook
 FROM $BASE_CONTAINER
 WORKDIR /app
 
+USER root
+
 # Create the environment by adding layers:
 RUN apt-get update && \
     apt-get install -y --no-install-recommends gcc && \
@@ -30,4 +32,5 @@ CMD ["jupyter", "notebook", "--port=8888", "--ip=*", "--no-browser", "--allow-ro
 # Doesn't directly expose port except for inter-container comm
 EXPOSE 8888
 
+USER $NB_UID
 
