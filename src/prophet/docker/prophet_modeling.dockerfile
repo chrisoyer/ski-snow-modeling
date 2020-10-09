@@ -13,13 +13,14 @@ WORKDIR /app
 USER root
 
 # Create the environment by adding layers:
+# install compilers and pip
 RUN apt-get update && \
     apt-get install --no-install-recommends gcc g++ python3-pip -y && \
-    rm -rf /var/lib/apt/lists/*
+    rm -rf /var/lib/apt/lists/*  # cleanup
 
 COPY requirements.txt .
-RUN pip install --no-cache-dir Cython numpy # needs to be installed first
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir -r requirements1.txt # needs to be installed first
+RUN pip install --no-cache-dir -r requirements2.txt
 
 # Add Tini. Tini operates as a process subreaper for jupyter. This prevents kernel crashes.
 ENV TINI_VERSION v0.6.0
