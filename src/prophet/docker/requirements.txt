@@ -2,6 +2,8 @@ numpy
 pandas
 matplotlib
 seaborn
+Cython
+pyston=2.17.1.0
 arviz
 jupyter
 fbprophet

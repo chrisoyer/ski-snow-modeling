@@ -15,10 +15,6 @@ RUN apt-get update && \
     apt-get install -y --no-install-recommends gcc && \
     rm -rf /var/lib/apt/lists/*
 
-RUN ['conda', 'install', '--quiet', '--yes', '--freeze-installed',
-     "'pystan=2.17.1.0'",
-	 '&&', 'conda', 'clean', '--all', '-fy'] 
-
 COPY requirements.txt .
 RUN ['pip', 'install', '-r', '--no-cache-dir', 'requirements.txt']
 

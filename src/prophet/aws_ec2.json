@@ -1,0 +1,19 @@
+{
+  "ImageId": "ami-0946d2ba12ee1ff75",
+  "UserData":"file:://ec2_script.sh"
+  "KeyName": "gistdev_default_rsa",
+  "SecurityGroupIds": [ "jupyter-sg" ],
+  "InstanceType": "t2.large",
+  "Placement": {
+    "AvailabilityZone": "us-east-1"
+  },
+
+  "NetworkInterfaces": [
+    {
+      "DeviceIndex": 0,
+      "SubnetId": "subnet-1f2b8d11",
+      "Groups": [ "sg-0123456" ],
+      "AssociatePublicIpAddress": true
+    }
+  ]
+}
