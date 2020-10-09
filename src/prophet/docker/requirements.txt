@@ -1,8 +1,6 @@
-numpy
 pandas
 matplotlib
 seaborn
-Cython
 pystan==2.17.1.0
 arviz
 jupyter

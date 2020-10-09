@@ -18,6 +18,7 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 COPY requirements.txt .
+RUN pip install --no-cache-dir -r Cython numpy # needs to be installed first
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Add Tini. Tini operates as a process subreaper for jupyter. This prevents kernel crashes.
