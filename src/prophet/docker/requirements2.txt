@@ -3,3 +3,4 @@ seaborn
 https://files.pythonhosted.org/packages/05/02/cab8f6c9c171eae62b74049fce07d431c2033e9d6d7b068695d2ca7d7f3d/pystan-2.19.1.1-cp38-cp38-manylinux1_x86_64.whl
 arviz
 jupyter
+convertdate  # needed by fbprophet but needs to be manually specified!
