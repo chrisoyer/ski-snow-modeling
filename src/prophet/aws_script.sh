@@ -2,11 +2,11 @@
 
 # script description: log into ec2, do initial config, and get into docker image
 
-# exit on error
-set -e
+# exit on error, show steps
+set -eoxu pipefail
 
 # launch instance
-aws ec2 run-instances --image-id ami-0947d2ba12ee1ff75 --instance-type t2.micro --security-group-ids jupyter-sg --iam Arn=arn:aws:iam::622780367867:instance-profile/data_science_role
+aws ec2 run-instances --image-id ami-0947d2ba12ee1ff75 --instance-type t2.micro --security-group-ids jupyter-sg --iam Arn=arn:aws:iam::622780367867:instance-profile/data_science_role --key-name nvirgina-2
 
 # get active ec2 ipa
 ec2ip=$(aws ec2 describe-instances | grep -oP '(?<=PublicDnsName": ")ec2\-.+\.com(?=",)' | head -1)

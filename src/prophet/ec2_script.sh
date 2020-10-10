@@ -1,3 +1,8 @@
+#!/bin/bash
+
+# exit on error, show steps
+set -eoxu pipefail
+
 # update ec2
 sudo yum update -y
 
