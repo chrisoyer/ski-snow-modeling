@@ -3,9 +3,10 @@
 #########
 
 # modified from scipy-notebook/Dockerfile
+# pystan is hardlinked to version for ec2 RedHat;
+# may need updated if source python version changes
 
 # needs to be fixed to be multi-stage
-# needs mid size ec2 instance; micro will not have enough RAM to compile
 ARG BASE_CONTAINER=jupyter/minimal-notebook
 FROM $BASE_CONTAINER
 WORKDIR /app
