@@ -18,7 +18,7 @@ RUN apt-get update && \
     apt-get install --no-install-recommends gcc g++ python3-pip -y && \
     rm -rf /var/lib/apt/lists/*  # cleanup
 	
-RUN python -m pip install --upgrade pip
+RUN sudo python -m pip install --upgrade pip
 
 COPY requirements1.txt .
 COPY requirements2.txt .
