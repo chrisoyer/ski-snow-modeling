@@ -1,13 +1,16 @@
 {
   "ImageId": "ami-0946d2ba12ee1ff75",
-  "UserData":"file:://ec2_script.sh"
+  "UserData": "file:://ec2_script.sh",
   "KeyName": "nvirgina-2",
   "SecurityGroupIds": [ "jupyter-sg" ],
   "InstanceType": "t2.large",
+  "IamInstanceProfile": {
+	  "Arn": "arn:aws:iam::622780367867:role/data_science_role",
+          "Name": "DataScientist"
+  },
   "Placement": {
     "AvailabilityZone": "us-east-1"
   },
-
   "NetworkInterfaces": [
     {
       "Groups": [ "sg-0e3ca31fafffd94ea" ],
