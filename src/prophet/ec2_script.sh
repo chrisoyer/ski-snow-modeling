@@ -15,8 +15,8 @@ sudo service docker start
 
 # git
 sudo yum install git -y
-git clone https://github.com/chrisoyer/ski-snow-modeling.git && cd ./ski-snow-modeling/src/prophet/docker/
+git clone https://github.com/chrisoyer/ski-snow-modeling.git && cd ./ski-snow-modeling/
 
 # build & start container. Use host networking to avoid ip forwarding -p 8888:8888
-sudo docker build . -f prophet_modeling.dockerfile -t prophet_img:v1 --network=host
-sudo docker run -it --net=host GRANT_SUDO=yes prophet_image:v1
+sudo docker build . -f ./src/prophet/docker/prophet_modeling.dockerfile -t prophet_img:v1 --network=host
+sudo docker run -it --net=host prophet_image:v1

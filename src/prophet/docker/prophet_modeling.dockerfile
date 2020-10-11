@@ -33,8 +33,7 @@ RUN chmod +x /usr/bin/tini
 ENTRYPOINT ["/usr/bin/tini", "--"]
 
 # CMD runs the default
-
-CMD ["jupyter", "lab", "--port=8888", "--ip=*", "--no-browser", "--allow-root", '--notebook-dir="/"']
+CMD jupyter lab --port=8888 --ip=* --no-browser --allow-root --notebook-dir="/"
 
 # copy repo into image - assumes dockerfile is in relevant repo
 COPY . /app
