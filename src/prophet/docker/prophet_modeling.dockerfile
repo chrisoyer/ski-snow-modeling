@@ -19,12 +19,12 @@ RUN apt-get update && \
     apt-get install --no-install-recommends gcc g++ python3-pip -y && \
     rm -rf /var/lib/apt/lists/*  # cleanup
 	
-COPY requirements1.txt .
-COPY requirements2.txt .
-COPY requirements3.txt .
-RUN pip install --no-cache-dir -r ./src/prophet/docker/requirements1.txt # Cython etc.
-RUN pip install --no-cache-dir -r ./src/prophet/docker/requirements2.txt # pystan etc.
-Run pip install --no-cache-dir -r ./src/prophet/docker/requirements3.txt # prophet
+COPY ./src/prophet/docker/requirements1.txt .
+COPY ./src/prophet/docker/requirements2.txt .
+COPY ./src/prophet/docker/requirements3.txt .
+RUN pip install --no-cache-dir -r requirements1.txt # Cython etc.
+RUN pip install --no-cache-dir -r requirements2.txt # pystan etc.
+Run pip install --no-cache-dir -r requirements3.txt # prophet
 
 # Add Tini. Tini operates as a process subreaper for jupyter. This prevents kernel crashes.
 ENV TINI_VERSION v0.6.0
