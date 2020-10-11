@@ -35,8 +35,12 @@ ENTRYPOINT ["/usr/bin/tini", "--"]
 # CMD runs the default
 CMD ["jupyter", "lab", "--port=8888", "--ip=*", "--no-browser", "--allow-root", '--notebook-dir="/"']
 
+# copy repo into image
+COPY ../../../ski-snow-modeling/ /app
+
 # Doesn't directly expose port except for inter-container comm
 EXPOSE 8888
 
-USER $NB_UID
+# causes problems because jovyan user password is a secret!
+# USER $NB_UID
 
