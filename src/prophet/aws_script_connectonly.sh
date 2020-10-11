@@ -2,7 +2,7 @@
 
 # script description: log into ec2, do initial config, and get into docker image
 
-# exit on error
+# exit on error, show steps
 set -eoxu pipefail
 
 # get active ec2 ipa

@@ -1,3 +1,1 @@
-# listed twice becauses errors occur on first run, but works on second
 fbprophet==0.7.1
-#fbprophet==0.7.1

@@ -1,3 +1,9 @@
+# General data sci libraries. Cython/numpy needed for pystan.
 Cython
 numpy
 pandas
+matplotlib
+seaborn
+jupyter
+fastparquet
+pyarrow
