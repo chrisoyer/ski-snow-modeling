@@ -170,13 +170,14 @@ def IC_chooser(unwrapped_mod=None, X=None, y=None, order_limit=(2,1)):
     return ic_df
 
 
-def train_test_split_ts(df=None, station=None, exog_cols=None, ski_yr_cutoff=7):
+def train_test_split_ts(df=None, station=None, exog_cols=None, ski_yr_cutoff=7, as_monthly=True):
     """returns Train Test by year for one station
     Inputs:
         df: data source
         station: station to filter to
         exog_cols: list of enxogenous regressor column names, or 'all' for all columns
         ski_yr_cutoff: int of year to make split at
+        as_monthly = uses index_setter to set df index (for SM models)
     returns:
         train_df, test_df
     """
