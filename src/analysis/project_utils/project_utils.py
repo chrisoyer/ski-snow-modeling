@@ -175,14 +175,17 @@ def train_test_split_ts(df=None, station=None, exog_cols=None, ski_yr_cutoff=7):
     Inputs:
         df: data source
         station: station to filter to
-        exog_cols: list of enxogenous regressor column names
+        exog_cols: list of enxogenous regressor column names, or 'all' for all columns
         ski_yr_cutoff: int of year to make split at
     returns:
         train_df, test_df
     """
     cols = ['base', 'ski_yr']
     if exog_cols:
-        cols.extend(exog_cols)
+        if exog_cols=='all':
+            cols = df.columns
+        else:
+            cols.extend(exog_cols)
     subset =  df.query('station==@station') \
     .pipe(index_setter, freq="MS",
           index='timestamp').fillna(0) \
