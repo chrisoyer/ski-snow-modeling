@@ -186,7 +186,9 @@ def train_test_split_ts(df=None, station=None, exog_cols=None, ski_yr_cutoff=7):
             cols = df.columns
         else:
             cols.extend(exog_cols)
-    subset =  df.query('station==@station') \
+    if station:
+        df = df.query('station==@station')
+    subset = df \
     .pipe(index_setter, freq="MS",
           index='timestamp').fillna(0) \
     .filter(items=cols)
