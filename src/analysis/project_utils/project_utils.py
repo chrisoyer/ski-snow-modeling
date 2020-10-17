@@ -170,7 +170,7 @@ def IC_chooser(unwrapped_mod=None, X=None, y=None, order_limit=(2,1)):
     return ic_df
 
 
-def train_test_split(df=None, station=None, exog_cols=None, ski_yr_cutoff=7):
+def train_test_split_ts(df=None, station=None, exog_cols=None, ski_yr_cutoff=7):
     """returns Train Test by year for one station
     Inputs:
         df: data source
