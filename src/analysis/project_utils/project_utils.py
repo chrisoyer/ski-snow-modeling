@@ -189,10 +189,10 @@ def train_test_split_ts(df=None, station=None, exog_cols=None, ski_yr_cutoff=7, 
             cols.extend(exog_cols)
     if station:
         df = df.query('station==@station')
-    subset = df \
-    .pipe(index_setter, freq="MS",
-          index='timestamp').fillna(0) \
-    .filter(items=cols)
+    if as_monthly:
+        df = df.pipe(index_setter, freq="MS",
+                     index='timestamp')
+    subset = df.fillna(0).filter(items=cols)
     train = subset.query('ski_yr<=@ski_yr_cutoff').drop(columns=['ski_yr'])
     test = subset.query('ski_yr>@ski_yr_cutoff').drop(columns=['ski_yr'])
     return train, test
