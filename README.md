@@ -6,6 +6,7 @@ Exploring the relationship between ski resort snowfall, base depth, and other fe
 1. [Files](https://github.com/chrisoyer/ski-snow-modeling/#Files)
 1. [EDA including geographic data](https://github.com/chrisoyer/ski-snow-modeling/#from-eda-including-geographic-data)
 1. [Data Cleaning](https://github.com/chrisoyer/ski-snow-modeling/#Data-Cleaning)
+1. [Feature Engineering](https://github.com/chrisoyer/ski-snow-modeling/#Feature-Engineering)
 1. [Time Series Analysis and ARIMA-style Models](https://github.com/chrisoyer/ski-snow-modeling/#Time-Series-Analysis-and-ARIMA-style-Models)
 1. [LSTM Models in Tensorflow](https://github.com/chrisoyer/ski-snow-modeling/#LSTM-Models-in-Tensorflow)
 1. [Bayesian Regression with PyStan](https://github.com/chrisoyer/ski-snow-modeling/#Bayesian-Regression-in-PyStan)
@@ -58,6 +59,8 @@ Select model (choosing (p,d,q)(P,D,Q)s order terms): I'm working on setup of wal
 For inference, I am currently using (0,1,1)(0,1,0)12 . The regression with SARIMA errors model includes snowfall as the exogenous variable. The betas for the snowfall variable for each resort are:  
 <img src="./resources/snowfall_beta.png" width=600>
 
+### Feature Engineering
+For monthly features, instead of binary one-hot encoded month columns, e.g. 3/27/2016 having a 1 in the March column, I encoded the distance to the nearest 15th, and to the second nearest 15th, rounded to 30 days per month. E.g. an April 1st datapoint would have .467 weight on the Month_3 feature and .533 on the Month_4 feature. This ensures changing weights on the months creates smooth predictions and should improve both inference and predictions.
 
 ### LSTM Models in Tensorflow
 After trying several architectures, the LSTM model with the best results was 1 hidden lstm layer, with 400 cells, stopped early at 12 epochs.  
