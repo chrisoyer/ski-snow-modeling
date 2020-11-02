@@ -49,6 +49,9 @@ Data cleaning issues included data missing not at random: the base and snowfall 
 
 ![link](./resources/interpolated_data.png)
 
+### Feature Engineering
+For monthly features, instead of binary one-hot encoded month columns, e.g. 3/27/2016 having a 1 in the March column, I encoded the distance to the nearest 15th, and to the second nearest 15th, rounded to 30 days per month. E.g. an April 1st datapoint would have .467 weight on the Month_3 feature and .533 on the Month_4 feature. This ensures changing weights on the months creates smooth predictions and should improve both inference and predictions.
+
 ### Time Series Analysis and ARIMA-style Models 
 
 Typical decomposition plot, this one for Winter Park: ![link](./resources/WP_decomposition.png)
@@ -58,9 +61,6 @@ Select model (choosing (p,d,q)(P,D,Q)s order terms): I'm working on setup of wal
 
 For inference, I am currently using (0,1,1)(0,1,0)12 . The regression with SARIMA errors model includes snowfall as the exogenous variable. The betas for the snowfall variable for each resort are:  
 <img src="./resources/snowfall_beta.png" width=600>
-
-### Feature Engineering
-For monthly features, instead of binary one-hot encoded month columns, e.g. 3/27/2016 having a 1 in the March column, I encoded the distance to the nearest 15th, and to the second nearest 15th, rounded to 30 days per month. E.g. an April 1st datapoint would have .467 weight on the Month_3 feature and .533 on the Month_4 feature. This ensures changing weights on the months creates smooth predictions and should improve both inference and predictions.
 
 ### LSTM Models in Tensorflow
 After trying several architectures, the LSTM model with the best results was 1 hidden lstm layer, with 400 cells, stopped early at 12 epochs.  
