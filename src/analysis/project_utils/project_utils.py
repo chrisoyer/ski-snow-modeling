@@ -406,3 +406,45 @@ def sample_weighted_season(df: pd.DataFrame)->pd.DataFrame:
     nonrare_data = df.query('month in @nonrare_months').sample(frac=.09, axis=0)
     # recombine
     return pd.concat([rare_data, semirare_data, nonrare_data], axis=0).drop(columns=['month'])
+
+# provide data including shapes and column type locations to stan
+def subsets(df: pd.DataFrame)-> namedtuple:
+    """slices sets of columns for pystan packager and for post-mcmc analysis"""
+    month_cols = [col for col in df.columns if "month" in col]   
+    region_cols = [c for c in df.columns if "region" in c]
+    ar_cols = [c for c in df.columns if "ar_" in c]
+    data = namedtuple('data', ['X', 'X_month', 'X_snow', 'X_region', 'X_ar', 'y'])
+    X = df[['snowfall', *region_cols, *month_cols, *ar_cols]]
+    Xmonth= X[month_cols]
+    Xsnow = X['snowfall']
+    Xregion = X[region_cols]
+    if ar_cols:
+        Xar = X[ar_cols]
+    else:
+        Xar = None
+    y = df[['delta_base']]
+    return data(X, Xmonth, Xsnow, Xregion, Xar, y)
+
+def data_packager(train: namedtuple=None, test: namedtuple=None) -> dict:
+    """puts named tuple data into dict of arrays format that pystan expects"""
+    stan_data = {'N': train.X.shape[0],
+                'K_month': train.X_month.shape[1],
+                'X_month': train.X_month.to_numpy(),
+                'K_reg': train.X_region.shape[1],
+                'X_reg': train.X_region.to_numpy(),
+                'X_snow': train.X_snow.to_numpy().reshape(-1,1),
+                'y': train.y.to_numpy().reshape(-1),
+                }
+    if train.X_ar:
+        stan_data.update(X_ar=train.Xar.to_numpy())
+    if test:
+        stan_data.update({
+            'N_test': test.X.shape[0],
+            'X_month_test': test.X_month.to_numpy(),
+            'X_reg_test': test.X_region.to_numpy(),
+            'X_snow_test': test.X_snow.to_numpy().reshape(-1,1),
+            })
+    if test:
+        if test.X_ar:
+            stan_data['X_ar_test'] = test.X_ar.to_numpy()
+    return stan_data
