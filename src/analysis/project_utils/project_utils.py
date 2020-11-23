@@ -11,6 +11,8 @@ import seaborn as sns
 from statsmodels.graphics.tsaplots import plot_acf, plot_pacf
 from sklearn.base import BaseEstimator, RegressorMixin
 from sklearn.model_selection import TimeSeriesSplit, cross_validate, GridSearchCV
+from typing import Union
+from collections import namedtuple
 
 class SMWrapper(BaseEstimator, RegressorMixin):
     """wrap statsmodels ARIMA models to expose sklearn-style API"""
