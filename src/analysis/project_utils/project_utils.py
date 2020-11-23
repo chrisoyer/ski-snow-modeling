@@ -285,3 +285,124 @@ def hist_plotter(hist):
     fig.suptitle('Training and Validation Metrics', size=25)
     plt.xlabel('Epochs')
     plt.show()
+
+## DATA CLEANING FOR PYSTAN
+def time_and_shape_log(f):
+    """logs time taken by, and out shape for function
+    use as decorate for piped functions in data pipeline"""
+    def wrapper(dataf, *args, **kwargs):
+        tic = dt.datetime.now()
+        result = f(dataf, *args, **kwargs)
+        toc = dt.datetime.now()
+        out_type = type(result)
+        print(f"{f.__name__}: time={toc-tic}, type={out_type}, shape={result.shape}")
+        return result
+    return wrapper
+
+def column_log(f):
+    """logs existing columns"""
+    def wrapper(dataf, *args, **kwargs):
+        print(f"{f.__name__} is taking: {dataf.columns}")
+        return f(dataf, *args, **kwargs)
+    return wrapper
+        
+@time_and_shape_log
+def add_month(data: pd.DataFrame) -> pd.DataFrame:
+    return data.assign(month=lambda x:
+                       x.pseudo_ts.dt.month)
+@time_and_shape_log
+def add_diff(data: pd.DataFrame, ar_terms: Union[bool, int]=False) -> pd.DataFrame:
+    """ use difference in base, not absolute value. can ad Autoregressive features to make modeling easier. 
+    Arguments:
+        data: df to operate on
+        include_ar: include no (False) or 1 or more AR features
+    Returns: dataframe with difference and possibly AR terms, but without actual base depth
+    """
+    data = (data.sort_values(['station', 'pseudo_ts'], ascending=True)
+            .assign(date_diff=lambda d: d.pseudo_ts.diff(1).dt.days,
+                    prior_station=lambda d: d.station.shift(1),
+                    # if difference is from an 'edge' assume to be zero. 
+                    delta_base=lambda d: np.where((d.date_diff==1) &
+                                                  (d.prior_station==d.station),
+                                                  d.base.diff(1), 0))
+            .drop(columns=['base', 'date_diff', 'prior_station'])
+            )
+    if ar_terms:
+        for reg_term in range(1, (1+ar_terms)): # 1 is 1 integration
+            data[f"ar_{reg_term}"] = data.delta_base.shift(1+reg_term).fillna(0)
+    return data
+
+@time_and_shape_log
+def ohe(data: pd.DataFrame, col: str) -> pd.DataFrame:
+    """One hot encodes <col> columns
+    """
+    return pd.concat([data.drop(columns=[col]),
+                      pd.get_dummies(data[col],
+                                     prefix=col)],
+                     axis=1)
+    
+@time_and_shape_log
+def monthly_mixture(df: pd.DataFrame) -> pd.DataFrame:
+    """similar to one hot encoding for month features, but weights on distance from
+    15th of month on either side, instead of binary month feature"""
+    assert "month" in df.columns
+    def month_fixer(ser: pd.Series)-> pd.Series:
+        # changes out of bounds month value to allowable values
+        ser = np.where(ser>12, ser-12, ser)
+        return np.where(ser<1, ser+12, ser)
+         
+    df = (df.assign(day=lambda x: x.pseudo_ts.dt.day)
+            .assign(dist_to_15=lambda x: x.day-15)
+            .assign(in_first_half=lambda x: x.dist_to_15<0 )
+            .assign(current_mo_weight=lambda x: (30-np.absolute(x.dist_to_15))/30)
+            .assign(secondary_mo_weight=lambda x: 1-x.current_mo_weight)
+            .assign(secondary_mo=lambda x: month_fixer(np.where(x.in_first_half, x.month-1, x.month+1)))
+            )
+    for month in range(1, 13):
+        df[f"month_{month}"] = np.where(df.month==month, df.current_mo_weight, 0)
+        df[f"month_{month}"] = np.where(df.secondary_mo==month, df.secondary_mo_weight, df[f"month_{month}"])
+    return df.drop(columns=['dist_to_15', 'in_first_half', 'current_mo_weight', 'secondary_mo_weight',
+                            'secondary_mo', 'day'])
+    
+@time_and_shape_log
+def add_month_x_snowfall(data: pd.DataFrame) -> pd.DataFrame:
+    """adds interaction terms"""
+    months = [col for col in data.columns
+              if 'month_' in col]
+    combos_df = pd.concat([pd.Series(data.snowfall * data[month],
+                                     name='snowfall_x_' + month)
+                           for month in months], axis=1)
+    return pd.concat([data, combos_df], axis=1)
+
+    
+@time_and_shape_log
+def cleaner(data: pd.DataFrame, includes: list=[None]) -> pd.DataFrame:
+    """ Removes interpolated rows and unneeded columns
+    Params:
+        data: df to operate on
+        includes: column names NOT to drop (don't need to specify usually)
+    ski_yr is needed for test/train split"""
+    data = data.query('basecol_interpolated==False')
+    bad_cols = ['dayofyr', 'station', 'state', 'pseudo_ski_yr',
+                'timestamp', 'basecol_interpolated', #need for grouping:'pseudo_ts',
+                'pseudo_ts_delt', 'month'
+               ]
+    bad_cols = [col for col in bad_cols if col not in includes]
+    return data.drop(columns=bad_cols)
+    
+@time_and_shape_log
+def sample_weighted_season(df: pd.DataFrame)->pd.DataFrame:
+    """samples dataframe but doesn't remove rare months and mildly reduces
+    amount of semi-rare months"""
+    # un-OHE
+    df['month'] = df[[c for c in df.columns if "month_" in c and "x_m" not in c]].idxmax(axis=1)
+    # define months
+    rare_months = [f'month_{i}' for i in range(5,11)]
+    semirare_months = ['month_4', 'month_11']
+    nonrare_months = ['month_12', 'month_1', 'month_2', 'month_3']
+    # split and sample data
+    rare_data = df.query('month in @rare_months')
+    semirare_data = df.query('month in @semirare_months').sample(frac=.3, axis=0)
+    nonrare_data = df.query('month in @nonrare_months').sample(frac=.09, axis=0)
+    # recombine
+    return pd.concat([rare_data, semirare_data, nonrare_data], axis=0).drop(columns=['month'])
