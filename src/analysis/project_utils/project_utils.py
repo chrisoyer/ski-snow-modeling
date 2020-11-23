@@ -13,6 +13,8 @@ from sklearn.base import BaseEstimator, RegressorMixin
 from sklearn.model_selection import TimeSeriesSplit, cross_validate, GridSearchCV
 from typing import Union
 from collections import namedtuple
+import datetime as dt
+
 
 class SMWrapper(BaseEstimator, RegressorMixin):
     """wrap statsmodels ARIMA models to expose sklearn-style API"""
