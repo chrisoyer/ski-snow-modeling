@@ -100,7 +100,6 @@ def AC_PAC_plotter(df=None, lags=30, differences=None):
     plot_acf(x=df.base,
              lags=lags, alpha=0.05,
              use_vlines=True,
-             missing='conservative',
              title=f'Autocorrelation: Differencing: {differences}',
              zero=True, ax=ax1
             )
