@@ -439,7 +439,7 @@ def data_packager(train: namedtuple=None, test: namedtuple=None) -> dict:
                 'y': train.y.to_numpy().reshape(-1),
                 }
     if train.X_ar is not None: # can't just 'if df': truth value ambiguous
-        stan_data.update(X_ar=train.Xar.to_numpy())
+        stan_data.update(X_ar=train.X_ar.to_numpy())
     if test:
         stan_data.update({
             'N_test': test.X.shape[0],
