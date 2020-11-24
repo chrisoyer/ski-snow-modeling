@@ -1,0 +1,17 @@
+aws ec2 request-spot-instances --image-id ami-0947d2ba12ee1ff75 \
+--instance-type t2.micro --security-group-ids jupyter-sg \
+--iam Arn=arn:aws:iam::622780367867:instance-profile/data_science_role \
+--key-name nvirgina-2 --dry-run \
+--block-device-mapping "[ { \"DeviceName\": \"/dev/xvda\", \"Ebs\": { \"VolumeSize\": 12 } } ]"
+
+
+
+aws ec2 run-instances --image-id ami-0947d2ba12ee1ff75 \
+--instance-type t2.micro --security-group-ids jupyter-sg \
+--iam Arn=arn:aws:iam::622780367867:instance-profile/data_science_role \
+--key-name nvirgina-2 --dry-run \
+--block-device-mapping "[ { \"DeviceName\": \"/dev/xvda\", \"Ebs\": { \"VolumeSize\": 12 } } ]" \
+--generate-cli-skeleton
+
+
+jupyter lab --port=8888 --ip=* --no-browser --allow-root --notebook-dir="/"
