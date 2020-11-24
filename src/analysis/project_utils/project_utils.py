@@ -98,16 +98,16 @@ def index_setter(df=None, freq='M', index="pseudo_ts"):
 def AC_PAC_plotter(df=None, lags=30, differences=None):
     fig, (ax1, ax2) = plt.subplots(2, 1)
     plot_acf(x=df.base,
-                          lags=lags, alpha=0.05,
-                          use_vlines=True, unbiased=False,
-                          missing='conservative',
-                          title=f'Autocorrelation: Differencing: {differences}',
-                          zero=True, ax=ax1
-                          )
+             lags=lags, alpha=0.05,
+             use_vlines=True,
+             missing='conservative',
+             title=f'Autocorrelation: Differencing: {differences}',
+             zero=True, ax=ax1
+            )
     plot_pacf(x=df.base, lags=lags,
-                           alpha=0.05, method='ldb', use_vlines=True,
-                           title='Partial Autocorrelation', zero=True,
-                           vlines_kwargs=None, ax=ax2)
+              alpha=0.05, use_vlines=True,
+              title='Partial Autocorrelation', zero=True,
+              vlines_kwargs=None, ax=ax2)
     fig
     
 def resid_plotter(residuals=None, y=None):
