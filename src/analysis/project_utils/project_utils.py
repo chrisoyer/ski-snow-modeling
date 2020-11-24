@@ -438,7 +438,7 @@ def data_packager(train: namedtuple=None, test: namedtuple=None) -> dict:
                 'X_snow': train.X_snow.to_numpy().reshape(-1,1),
                 'y': train.y.to_numpy().reshape(-1),
                 }
-    if train.X_ar:
+    if train.X_ar is not None: # can't just 'if df': truth value ambiguous
         stan_data.update(X_ar=train.Xar.to_numpy())
     if test:
         stan_data.update({
@@ -448,6 +448,6 @@ def data_packager(train: namedtuple=None, test: namedtuple=None) -> dict:
             'X_snow_test': test.X_snow.to_numpy().reshape(-1,1),
             })
     if test:
-        if test.X_ar:
+        if test.X_ar is not None:
             stan_data['X_ar_test'] = test.X_ar.to_numpy()
     return stan_data
