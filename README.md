@@ -1,5 +1,5 @@
 # ski-snow-modeling
-Exploring the relationship between ski resort snowfall, base depth, and other features, with an emphasis on time series modeling. 
+Exploring the relationship between ski resort snowfall, base depth, and other features, with an emphasis on time series modeling and Bayesian techniques.
 
 ### Table of Contents
 1. [Description of Goals](https://github.com/chrisoyer/ski-snow-modeling/#Description-of-Goals)
@@ -19,7 +19,7 @@ Tools: Scrapy, seaborn, altair (vega-lite visualizations), Numpy/Pandas etc., ti
 
 ### Files:
 [./src/](./src/): elevation_scrapy.py scrapes basic data from wikipedia, station_list_ots.py scrapes list of stations from OTS, and ots_snow_scrapy_scraper.py scrapes the actual snowfall and base data from OTS. elevation_scrape_viz.ipynb explores and visualizes the scraped data.  
-[./src/analysis/](./src/analysis/): snow_EDA_&_cleaning.ipynb does EDA, snow_ts_analysis.ipynb is classical e.g. ARIMA analysis, TF-snow_ts_analysis.ipynb is the tensorflow model, and snow-stan.ipynb is the PyStan model.  
+[./src/analysis/](./src/analysis/): snow_EDA_&_cleaning.ipynb does EDA, snow_ts_analysis.ipynb is classical e.g. ARIMA analysis, TF-snow_ts_analysis.ipynb is the tensorflow model, and snow-stan.ipynb is the PyStan model. Much of the code is in the ./src/project_utils/project_utils.py module to reduce notebook size and facility code re-use.
 [./src/analysis/project_utils](./src/analysis/project_utils): location for .py files with fuctions/classes used in the multiple places.  
 [./src/prophet/](./src/prophet/) holds the dockerfile and notebook for the prophet model.
 
@@ -53,13 +53,14 @@ Data cleaning issues included data missing not at random: the base and snowfall 
 For monthly features, instead of binary one-hot encoded month columns, e.g. 3/27/2016 having a 1 in the March column, I encoded the distance to the nearest 15th, and to the second nearest 15th, rounded to 30 days per month. E.g. an April 1st datapoint would have .467 weight on the Month_3 feature and .533 on the Month_4 feature. This ensures changing weights on the months creates smooth predictions and should improve both inference and predictions.
 
 ### Time Series Analysis and ARIMA-style Models 
+I used monthly aggregated change for traditional models. 
 
 Typical decomposition plot, this one for Winter Park: ![link](./resources/WP_decomposition.png)
 
-Select model (choosing (p,d,q)(P,D,Q)s order terms): I'm working on setup of walk-forward crossvalidation of models. AIC/BIC based model selection works, but is suggesting different top models compared to traditional selection of terms based on AC/PAC plots. Plots look like this:
+Select model (choosing (p,d,q)(P,D,Q)s order terms): AIC/BIC based model selection works, but suggested different top models compared to traditional selection of terms based on AC/PAC plots. Plots look like this:
 ![link](./resources/AC_PAC.png). 
 
-For inference, I am currently using (0,1,1)(0,1,0)12 . The regression with SARIMA errors model includes snowfall as the exogenous variable. The betas for the snowfall variable for each resort are:  
+For inference, I used (0,1,1)(0,1,0)12 . The regression with SARIMA errors model includes snowfall as the exogenous variable. The betas for the snowfall variable for each resort are:  
 <img src="./resources/snowfall_beta.png" width=600>
 
 ### LSTM Models in Tensorflow
@@ -75,12 +76,14 @@ While predicting future values is an importance use of time series data, I was m
 
 I modeled the effect of melting by month, and the effect of snowfall. The amount of melting is quite small about 1 inch per _month_ for January and February, whereas in May one inch is lost per _day_. Note: because the values for June-October are rare, values are mostly from prior, and noise dominates.  
 <img src="./resources/monthly_snowmelt.png" width=700>  
-The amount of base derived from a unit of snowfall varies by region, with Cascades seeing large amounts of base (.12), and Colorado seeing small amounts (.05) - I did not encode individual priors for each region, but this makes sense, as fluffy dry powder should compact more than heavy, wet powder. Note the improvement these estimates show vs the regression with SARIMA errors model above.
+The amount of base derived from a unit of snowfall varies by region, with Cascades seeing large amounts of base (.08), and Colorado seeing small amounts (.02) - I did not encode individual priors for each region, but this makes sense, as fluffy dry powder should compact more than heavy, wet powder. Note the improvement these estimates show vs the regression with SARIMA errors model above.
 <img src="./resources/snowfall_beta_bayesian.png" width=700>  
 Estimates from individual Markov Chains & trace plots:  
 ![link](./resources/unpooled_traces.png)
 
-Todo: add predictions and estimate test error metrics.
+Additionally, I added a feature for previous days change of base (equivalent to a (1,1,0) ARIMA model). Prediction quality was higher but only slightly; the beta for the AR term (i.e. how much yesterdays snowfall affected todays, beyond what it did to the base yesterday) was around .012, with 50% of value between .007 and .017. The roughly doubled the amount of based derived from a given unit of fallen powder.
+
+Predictions quality was not high for individual days, but taking all predictions within a month has an r2 of .27 for the base Stan model and .30 for the Stan model that included the AR term. Given that the outcomes are highly influenced by unpredictable and unmodeled weather, and the difficulties of accurately measuring 'base depth' across an entire ski resort, I am happy with this result.
 
 ### Regression Using Engineered Features
 I predicted ski season length using several models, chosen using cross-validated test error, hyperparameters chosen by random search.
@@ -97,3 +100,6 @@ The linear model also did well, and these are the paths of the coefficients for 
 ### In progress: 
 * reviewing transformer-style models or CNNs, possibly with dialation.  
 * Facebook Prophet GAM model. (dockerfile is working, modeling still in progress).  
+* loglik on stan models for model comparison
+* use hierarchical model in Stan - probably unnecessary given data size
+* gaussian process model for ski season length regression
