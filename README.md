@@ -74,14 +74,14 @@ Note: I switched to time intervals of 1 day. Todo: multistep predictions from mo
 ### Bayesian Regression in PyStan
 While predicting future values is an importance use of time series data, I was most interested in inference into the causes of base depth change. I wanted to incorporate domain knowlege, in this case the obvious information that without snowfall, base depth can only decrease (from melting and possibly sublimation); and ceteris paribus, snowfall should increase base depth, but by less than the amount of snowfall (snow falls as powder, and is compressed into packed snow). Modeling this system with these constraints can be done by specifying priors in a Baysian statistical model. 
 
-I modeled the effect of melting by month, and the effect of snowfall. The amount of melting is quite small about 1 inch per _month_ for January and February, whereas in May one inch is lost per _day_. Note: because the values for June-October are rare, values are mostly from prior, and noise dominates.  
+I modeled the effect of melting by month, and the effect of snowfall. The amount of melting is quite small about 1 inch per _month_ for January and February, whereas in May one inch is lost per _day_. Note: because the values for June-October are rare, values are mostly from prior.  
 <img src="./resources/monthly_snowmelt.png" width=700>  
 The amount of base derived from a unit of snowfall varies by region, with Cascades seeing large amounts of base (.08), and Colorado seeing small amounts (.02) - I did not encode individual priors for each region, but this makes sense, as fluffy dry powder should compact more than heavy, wet powder. Note the improvement these estimates show vs the regression with SARIMA errors model above.
 <img src="./resources/snowfall_beta_bayesian.png" width=700>  
 Estimates from individual Markov Chains & trace plots:  
 ![link](./resources/unpooled_traces.png)
 
-Additionally, I added a feature for previous days change of base (equivalent to a (1,1,0) ARIMA model). Prediction quality was higher but only slightly; the beta for the AR term (i.e. how much yesterdays snowfall affected todays, beyond what it did to the base yesterday) was around .012, with 50% of value between .007 and .017. The roughly doubled the amount of based derived from a given unit of fallen powder.
+Additionally, I added a feature for previous days change of base (equivalent to a (1,1,0) ARIMA model). Prediction quality was higher but only slightly; the beta for the AR term (i.e. how much yesterdays snowfall affected todays, beyond what it did to the base yesterday) was around .012, with 50% of value between .007 and .017. This roughly doubled the amount of based derived from a given unit of fallen powder.
 
 Predictions quality was not high for individual days, but taking all predictions within a month has an r2 of .27 for the base Stan model and .30 for the Stan model that included the AR term. Given that the outcomes are highly influenced by unpredictable and unmodeled weather, and the difficulties of accurately measuring 'base depth' across an entire ski resort, I am happy with this result.
 
