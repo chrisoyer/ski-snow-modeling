@@ -60,7 +60,7 @@ Typical decomposition plot, this one for Winter Park: ![link](./resources/WP_dec
 Select model (choosing (p,d,q)(P,D,Q)s order terms): AIC/BIC based model selection works, but suggested different top models compared to traditional selection of terms based on AC/PAC plots. Plots look like this:
 ![link](./resources/AC_PAC.png). 
 
-For inference, I used (0,1,1)(0,1,0)12 . The regression with SARIMA errors model includes snowfall as the exogenous variable. The betas for the snowfall variable for each resort are:  
+For inference, I used (0,1,1)(0,1,0)12 . The ARIMA model includes snowfall as the exogenous variable (for each time step). The betas for the snowfall variable for each resort are:  
 <img src="./resources/snowfall_beta.png" width=600>
 
 ### LSTM Models in Tensorflow
@@ -76,7 +76,7 @@ While predicting future values is an importance use of time series data, I was m
 
 I modeled the effect of melting by month, and the effect of snowfall. The amount of melting is quite small about 1 inch per _month_ for January and February, whereas in May one inch is lost per _day_. Note: because the values for June-October are rare, values are mostly from prior.  
 <img src="./resources/monthly_snowmelt.png" width=700>  
-The amount of base derived from a unit of snowfall varies by region, with Cascades seeing large amounts of base (.08), and Colorado seeing small amounts (.02) - I did not encode individual priors for each region, but this makes sense, as fluffy dry powder should compact more than heavy, wet powder. Note the improvement these estimates show vs the regression with SARIMA errors model above.
+The amount of base derived from a unit of snowfall varies by region, with Cascades seeing large amounts of base (.08), and Colorado seeing small amounts (.02) - I did not encode individual priors for each region, but this makes sense, as fluffy dry powder should compact more than heavy, wet powder. Note the improvement these estimates show vs the ARIMA model above.
 <img src="./resources/snowfall_beta_bayesian.png" width=700>  
 Estimates from individual Markov Chains & trace plots:  
 ![link](./resources/unpooled_traces.png)
